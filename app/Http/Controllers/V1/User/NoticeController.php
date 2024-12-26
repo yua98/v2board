@@ -37,6 +37,13 @@ class NoticeController extends Controller
     
         $total = $model->count();
         $res = $model->forPage($current, $pageSize)->get();
+        // 增加
+        if (preg_match('/Electron|okhttp|Moetor/i', $_SERVER['HTTP_USER_AGENT'])) {
+        foreach ($res as &$item) {
+            $item->content = strip_tags($item->content);
+        }
+    }
+        // 判断浏览器如果是潮汐或者萌通，则去除掉公告里的html标签
     
         return response([
             'data' => $res,
