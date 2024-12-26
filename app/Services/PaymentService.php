@@ -46,8 +46,14 @@ class PaymentService
         }
 
         return $this->payment->pay([
+            // 'notify_url' => $notifyUrl,
+            // 'return_url' => url('/#/order/' . $order['trade_no']),
+            // 'trade_no' => $order['trade_no'],
+            // 'total_amount' => $order['total_amount'],
+            // 'user_id' => $order['user_id'],
+            // 'stripe_token' => $order['stripe_token']
             'notify_url' => $notifyUrl,
-            'return_url' => url('/#/order/' . $order['trade_no']),
+            'return_url' => 'https://f.ipip.dog/static/payok.html',
             'trade_no' => $order['trade_no'],
             'total_amount' => $order['total_amount'],
             'user_id' => $order['user_id'],
