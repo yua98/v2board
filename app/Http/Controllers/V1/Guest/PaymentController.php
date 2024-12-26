@@ -13,6 +13,7 @@ use App\Services\PaymentService;
 use App\Services\TelegramService;
 use Illuminate\Http\Request;
 
+
 class PaymentController extends Controller
 {
     public function notify($method, $uuid, Request $request)
@@ -41,12 +42,25 @@ class PaymentController extends Controller
         if (!$orderService->paid($callbackNo)) {
             return false;
         }
+        /* 新增收款显示余额 */
+        $dayIncome = Order::where('created_at', '>=', strtotime(date('Y-m-d')))
+            ->where('created_at', '<', time())
+            ->whereNotIn('status', [0, 2])
+            ->sum('total_amount');
+        $plan = Plan::find($order->plan_id);
+        /* 新增收款显示余额 结束 */
         $telegramService = new TelegramService();
+        // $message = sprintf(
+        //     "💰成功收款%s元\n———————————————\n订单号：%s",
+        //     $order->total_amount / 100,
+        //     $order->trade_no
+        // );
         $message = sprintf(
-            "💰成功收款%s元\n———————————————\n订单号：%s",
+            "💰成功收款%s元\n———————————————\n订单号：%s\n套餐：%s\n———————————————\n当日总计流水：%s",
             $order->total_amount / 100,
-            $order->trade_no
-        );
+            // $order->trade_no, $plan->name, $dayIncome
+            $order->trade_no, $plan->name, $dayIncome/100 
+        ); /* 新增收款显示余额 */
         $telegramService->sendMessageWithAdmin($message);
         return true;
     }
