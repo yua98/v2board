@@ -51,6 +51,16 @@ Route::get('/' . config('v2board.secure_path', config('v2board.frontend_admin_pa
     ]);
 });
 
+// if (!empty(config('v2board.subscribe_path'))) {
+//     Route::get(config('v2board.subscribe_path'), 'V1\\Client\\ClientController@subscribe')->middleware('client');
+// }
+// old xiaov2b自定义订阅路径
+
+// Default subscription route
+Route::get('/api/v1/client/subscribe', 'V1\\Client\\ClientController@subscribe')->middleware('client');
+
+// Check if the configured path is set
 if (!empty(config('v2board.subscribe_path'))) {
+    // Add the configured path route
     Route::get(config('v2board.subscribe_path'), 'V1\\Client\\ClientController@subscribe')->middleware('client');
 }
