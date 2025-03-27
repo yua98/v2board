@@ -43,7 +43,15 @@ class NoticeController extends Controller
             $item->content = strip_tags($item->content);
         }
     }
-        // 判断浏览器如果是潮汐或者萌通，则去除掉公告里的html标签
+        if (preg_match('/Moetor\/(1\.3\.\d+|4\.9\.2)/i', $_SERVER['HTTP_USER_AGENT'])) {
+    foreach ($res as &$item) {
+        if (!\Str::startsWith($item->content, '<')) {
+            $item->content = str_replace("\n", "<br>", $item->content);
+        }
+    }
+}
+        
+        // 判断浏览器如果是潮汐或者萌通，则去除掉公告里的html标签,修复Moetor1.3.x以及 4.9.2公告换行问题
     
         return response([
             'data' => $res,
